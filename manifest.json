@@ -1,6 +1,6 @@
 {
-    "id": "translate",
-    "name": "Translate",
+    "id": "translate-mmortall",
+    "name": "Translate (mmortall fork)",
     "version": "1.4.9",
     "minAppVersion": "1.0.0",
     "description": "Translate text and notes with Google Translate, DeepL, Azure, and more.",

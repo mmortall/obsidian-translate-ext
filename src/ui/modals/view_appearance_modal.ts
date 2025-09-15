@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { App, Modal } from "obsidian";
 import type { SvelteComponent } from "svelte";
 import { QUICK_ACTIONS, QUICK_SETTINGS } from "../../constants";
@@ -17,19 +18,19 @@ export default class ViewAppearanceModal extends Modal {
 	async onOpen() {
 		const state = this.translator_view.getState();
 
-		state.top_buttons = state.top_buttons.map((button: any) => {
+		state.top_buttons = (state.top_buttons as unknown[]).map((button: unknown) => {
 			return {
 				id: button + `_${generateIdentifier()}`,
 				...QUICK_SETTINGS[button as keyof typeof QUICK_SETTINGS],
 			};
 		});
-		state.left_buttons = state.left_buttons.map((button: any) => {
+		state.left_buttons = (state.left_buttons as unknown[]).map((button: unknown) => {
 			return {
 				id: button + `_${generateIdentifier()}`,
 				...QUICK_ACTIONS[button as keyof typeof QUICK_ACTIONS],
 			};
 		});
-		state.right_buttons = state.right_buttons.map((button: any) => {
+		state.right_buttons = (state.right_buttons as unknown[]).map((button: unknown) => {
 			return {
 				id: button + `_${generateIdentifier()}`,
 				...QUICK_ACTIONS[button as keyof typeof QUICK_ACTIONS],
