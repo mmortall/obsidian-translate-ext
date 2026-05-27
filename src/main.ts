@@ -43,7 +43,7 @@ import { DEFAULT_SETTINGS, ICONS, SERVICES_INFO, TRANSLATOR_VIEW_ID } from "./co
 import { DummyTranslate } from "./handlers";
 import { nested_object_assign, rateLimit } from "./util";
 
-import { detect_selection, translate_selection } from "./helpers";
+import { deploy_hugo_translations, detect_selection, translate_selection } from "./helpers";
 
 export default class TranslatorPlugin extends Plugin {
 	/**
@@ -269,6 +269,18 @@ export default class TranslatorPlugin extends Plugin {
 					new SwitchService(this.app, this, (service) => {
 						this.setTranslationService(service);
 					}).open();
+				},
+			},
+			{
+				id: "translator-deploy-hugo",
+				name: "Deploy Hugo translations (ru + en)",
+				icon: "translate-file-new",
+				callback: async () => {
+					const loaded_settings = get(settings);
+					const active = this.app.workspace.getActiveFile();
+					await deploy_hugo_translations(this, {
+						apply_glossary: loaded_settings.apply_glossary,
+					}, ["ru", "en"], active ?? undefined);
 				},
 			},
 			{

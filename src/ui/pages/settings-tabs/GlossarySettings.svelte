@@ -536,9 +536,8 @@
     description="When you're finished with editing your glossary, sync it to selected translation service"
     notices={[
       {
-        type: "text",
-        text: "If the online glossary does not support a specific language pair, or if the service does not support online glossaries at all, glossary entries <i>can</i> be applied locally if <b>`Local Glossary`</b> setting is enabled",
         type: "info",
+        text: "If the online glossary does not support a specific language pair, or if the service does not support online glossaries at all, glossary entries <i>can</i> be applied locally if <b>`Local Glossary`</b> setting is enabled",
       },
     ]}
   >

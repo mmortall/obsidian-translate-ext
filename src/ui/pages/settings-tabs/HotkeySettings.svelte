@@ -1,7 +1,6 @@
 <script lang="ts">
   import type { Modifier } from "obsidian";
 
-  import TranslatorPlugin from "../../../main";
   import { settings } from "stores";
 
   import { Icon, SettingItem } from "../../components";
@@ -12,7 +11,6 @@
   import { getHotKeyString } from "../../../util";
   import { HOTKEY_ACTIONS } from "../../../constants";
 
-  export let plugin: TranslatorPlugin;
   let current_id: string | null = null;
 
   onDestroy(() => {

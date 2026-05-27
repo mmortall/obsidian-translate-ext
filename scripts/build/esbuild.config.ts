@@ -54,7 +54,9 @@ esbuild.build({
 	outdir: dir,
 
 	plugins: [
-		sassPlugin(),
+		sassPlugin({
+			silenceDeprecations: ["import"],
+		}),
 		esbuildSvelte({
 			compilerOptions: { css: "injected" },
 			preprocess: sveltePreprocess(),
@@ -62,7 +64,8 @@ esbuild.build({
 				return warning.code !== "a11y-click-events-have-key-events" &&
 					warning.code !== "a11y-no-static-element-interactions" &&
 					warning.code !== "a11y-no-noninteractive-element-interactions" &&
-					warning.code !== "a11y-no-noninteractive-tabindex";
+					warning.code !== "a11y-no-noninteractive-tabindex" &&
+					warning.code !== "unused-export-let";
 			},
 		}),
 		inlineWorkerPlugin({

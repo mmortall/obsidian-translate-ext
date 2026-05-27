@@ -5,7 +5,6 @@
 
   export let typingdelay: number = 0;
   export let onChange: (value: string) => void;
-  export let onInput: (value: string) => void;
   export let onContextmenu: (e: Event) => void;
   let timer: NodeJS.Timeout | null = null;
 </script>

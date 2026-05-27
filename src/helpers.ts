@@ -1,8 +1,10 @@
 
-import { Editor, Notice, TFile} from "obsidian";
+import { Editor, Notice, TFile } from "obsidian";
+import { get } from "svelte/store";
 import type { ServiceOptions, TranslationResult } from "./handlers/types";
 import t from "./l10n";
 import type TranslatorPlugin from "./main";
+import { settings } from "./stores";
 
 function slugify(title: string): string {
   return title
@@ -139,6 +141,57 @@ export async function translate_file(
 		status_code: 200,
 		translation: translated_text.join("\n\n"),
 	};
+}
+
+/** Hugo i18n: deploy ru + en from active note or vault-root drafts. */
+export async function deploy_hugo_translations(
+	plugin: TranslatorPlugin,
+	options: ServiceOptions,
+	languages: string[] = ["ru", "en"],
+	file?: TFile | null,
+): Promise<TranslationResult> {
+	const loaded = get(settings);
+	const targets = languages.length
+		? languages
+		: (loaded.last_used_target_languages?.length
+			? loaded.last_used_target_languages
+			: [loaded.default_target_language, loaded.default_source_language].filter(Boolean));
+
+	const uniqueLangs = [...new Set(targets.map((l) => l.toLowerCase()))];
+	if (!uniqueLangs.length) {
+		return { status_code: 400, message: "No target languages configured" };
+	}
+
+	let files: TFile[] = [];
+	if (file) {
+		files = [file];
+	} else {
+		const root = plugin.app.vault.getRoot();
+		for (const child of root.children) {
+			if (child instanceof TFile && child.extension === "md") {
+				files.push(child);
+			}
+		}
+	}
+
+	if (!files.length) {
+		return { status_code: 400, message: "No markdown drafts found in vault root" };
+	}
+
+	plugin.message_queue(`Deploy Hugo translations (${uniqueLangs.join(", ")})…`);
+
+	for (const f of files) {
+		for (const lang of uniqueLangs) {
+			const result = await translate_file(plugin, f, lang, false, options);
+			if (result.status_code !== 200) {
+				plugin.message_queue(`${f.basename} → ${lang}: ${result.message ?? "failed"}`);
+				return result;
+			}
+		}
+	}
+
+	plugin.message_queue(`Hugo translations deployed for ${files.length} note(s)`);
+	return { status_code: 200 };
 }
 
 /**
